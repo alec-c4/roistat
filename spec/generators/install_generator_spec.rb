@@ -14,7 +14,7 @@ RSpec.describe Roistat::Generators::InstallGenerator, type: :generator do
 
   before { prepare_destination }
 
-  describe "AC-P11: install initializer" do
+  describe "install initializer" do
     subject(:initializer) { File.read(File.join(destination_root, "config/initializers/roistat.rb")) }
 
     before { run_generator }

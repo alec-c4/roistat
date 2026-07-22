@@ -6,8 +6,12 @@ SimpleCov.start do
   add_group "Library", "lib"
 end
 
-require "roistat"
+# Load WebMock + httpx adapter before application code.
+require "webmock"
+require "httpx/adapters/webmock"
 require "webmock/rspec"
+
+require "roistat"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -18,5 +22,10 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
+  end
+
+  config.before do
+    Roistat.reset_configuration!
+    WebMock.reset!
   end
 end
