@@ -19,3 +19,5 @@ gem "rubocop-performance", require: false
 gem "lefthook", require: false
 
 gem "simplecov", require: false
+
+gem "webmock", require: false
