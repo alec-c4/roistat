@@ -21,3 +21,5 @@ gem "lefthook", require: false
 gem "simplecov", require: false
 
 gem "webmock", require: false
+
+gem "railties", ">= 7.2", require: false
