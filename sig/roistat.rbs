@@ -43,6 +43,10 @@ class Roistat::Client
   def clients: () -> Roistat::Resources::Clients
   def visits: () -> Roistat::Resources::Visits
   def events: () -> Roistat::Resources::Events
+  def analytics: () -> Roistat::Resources::Analytics
+  def channels: () -> Roistat::Resources::Channels
+  def statistics: () -> Roistat::Resources::Statistics
+  def indicators: () -> Roistat::Resources::Indicators
 end
 
 class Roistat::Resources::Calltracking
@@ -119,6 +123,39 @@ class Roistat::Resources::Events
   def add: (Array[untyped]) -> untyped
   def log: (**untyped) -> untyped
   def archive: (event_id: Integer | String, events: Array[untyped]) -> untyped
+end
+
+class Roistat::Resources::Analytics
+  def data: (**untyped) -> untyped
+  def data_export_excel: (**untyped) -> untyped
+  def metrics_new: (**untyped) -> untyped
+  def dimensions: (**untyped) -> untyped
+  def dimension_values: (**untyped) -> untyped
+  def attribution_models: (**untyped) -> untyped
+  def list_orders: (**untyped) -> untyped
+  def custom_metrics_list: (**untyped) -> untyped
+  def custom_manual_value_list: (**untyped) -> untyped
+  def custom_manual_value_add: (**untyped) -> untyped
+  def custom_manual_value_delete: (**untyped) -> untyped
+  def funnel_data: (**untyped) -> untyped
+  def event_add: (**untyped) -> untyped
+end
+
+class Roistat::Resources::Channels
+  def source_list: (**untyped) -> untyped
+  def cost_list: (**untyped) -> untyped
+  def cost_add: (**untyped) -> untyped
+  def cost_update: (**untyped) -> untyped
+  def cost_delete: (id: Integer | String) -> untyped
+end
+
+class Roistat::Resources::Statistics
+  def get_daily: (**untyped) -> untyped
+end
+
+class Roistat::Resources::Indicators
+  def list: () -> untyped
+  def run_script: (indicator_id: Integer | String) -> untyped
 end
 
 class Roistat::Error < StandardError
