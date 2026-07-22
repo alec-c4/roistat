@@ -13,6 +13,7 @@ require_relative "roistat/resources/base"
 require_relative "roistat/resources/projects"
 require_relative "roistat/resources/access"
 require_relative "roistat/resources/billing"
+require_relative "roistat/resources/calltracking"
 
 module Roistat
   class << self

@@ -73,7 +73,7 @@ class Roistat::Response
     return body if size <= @binary_tempfile_threshold
 
     tempfile = Tempfile.new(["roistat", ".bin"], binmode: true)
-    tempfile.write(body)
+    tempfile.write(body.b)
     tempfile.rewind
     tempfile
   end

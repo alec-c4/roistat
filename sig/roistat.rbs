@@ -31,6 +31,31 @@ class Roistat::Client
   def get: (String, ?params: Hash[Symbol | String, untyped], ?parse: Symbol) -> untyped
   def post: (String, ?params: Hash[Symbol | String, untyped], ?body: untyped, ?parse: Symbol) -> untyped
   def request: (Symbol | String, String, ?params: Hash[Symbol | String, untyped], ?body: untyped, ?parse: Symbol) -> untyped
+
+  def projects: () -> Roistat::Resources::Projects
+  def access: () -> Roistat::Resources::Access
+  def billing: () -> Roistat::Resources::Billing
+  def calltracking: () -> Roistat::Resources::Calltracking
+end
+
+class Roistat::Resources::Calltracking
+  def script_list: (**untyped) -> untyped
+  def script_create: (**untyped) -> untyped
+  def script_update: (**untyped) -> untyped
+  def script_delete: (id: Integer | String) -> untyped
+  def phone_list: (**untyped) -> untyped
+  def phone_prefix_list: (**untyped) -> untyped
+  def phone_create: (phones: Array[String]) -> untyped
+  def phone_buy: (prefix: String, count: Integer) -> untyped
+  def phone_update: (**untyped) -> untyped
+  def phone_delete: (phones: Array[Integer | String]) -> untyped
+  def call_list: (**untyped) -> untyped
+  def call_update: (**untyped) -> untyped
+  def call_delete: (ids: Array[Integer | String]) -> untyped
+  def call_file: (call_id: Integer | String) -> untyped
+  def call_xls_export: (period: Hash[Symbol | String, untyped]) -> untyped
+  def data: (period: Hash[Symbol | String, untyped]) -> untyped
+  def phone_call: (**untyped) -> untyped
 end
 
 class Roistat::Error < StandardError
