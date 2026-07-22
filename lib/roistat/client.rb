@@ -105,6 +105,22 @@ class Roistat::Client
     @events ||= Roistat::Resources::Events.new(self)
   end
 
+  def analytics
+    @analytics ||= Roistat::Resources::Analytics.new(self)
+  end
+
+  def channels
+    @channels ||= Roistat::Resources::Channels.new(self)
+  end
+
+  def statistics
+    @statistics ||= Roistat::Resources::Statistics.new(self)
+  end
+
+  def indicators
+    @indicators ||= Roistat::Resources::Indicators.new(self)
+  end
+
   private
 
   def validate_credentials!

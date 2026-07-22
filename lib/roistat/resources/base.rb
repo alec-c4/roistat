@@ -20,4 +20,12 @@ class Roistat::Resources::Base
       binary_tempfile_threshold: client.binary_tempfile_threshold
     )
   end
+
+  def post_optional_body(path, body)
+    if body.nil? || body.empty?
+      client.post(path)
+    else
+      client.post(path, body: body)
+    end
+  end
 end

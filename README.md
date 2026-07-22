@@ -22,6 +22,10 @@ The gem sends every request with the `Api-key` header (never as a `key` query pa
   - [Clients](#clients--clientclients)
   - [Visits](#visits--clientvisits)
   - [Events](#events--clientevents)
+  - [Analytics](#analytics--clientanalytics)
+  - [Channels](#channels--clientchannels)
+  - [Statistics](#statistics--clientstatistics)
+  - [Indicators](#indicators--clientindicators)
 - [Responses](#responses)
 - [Errors](#errors)
 - [Development](#development)
@@ -412,6 +416,88 @@ Examples:
 ```ruby
 Roistat.client.events.log(name: "Cart")
 Roistat.client.events.send_event(name: "Purchase", visit: "100001")
+```
+
+### Analytics — `client.analytics`
+
+Official docs: [analytics API](https://help-ru.roistat.com/API/methods/analytics/).
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `data(**body)` | POST | `/project/analytics/data` |
+| `data_export_excel(**body)` | POST | `/project/analytics/data/export/excel` (binary) |
+| `metrics_new(**body)` | POST | `/project/analytics/metrics-new` |
+| `dimensions(**body)` | POST | `/project/analytics/dimensions` |
+| `dimension_values(**body)` | POST | `/project/analytics/dimension-values` |
+| `attribution_models(**body)` | POST | `/project/analytics/attribution-models` |
+| `list_orders(**body)` | POST | `/project/analytics/list-orders` |
+| `custom_metrics_list(**params)` | GET | `/project/analytics/metrics/custom/list` |
+| `custom_manual_value_list(**body)` | POST | `/project/analytics/metrics/custom/manual/value/list` |
+| `custom_manual_value_add(**body)` | POST | `/project/analytics/metrics/custom/manual/value/add` |
+| `custom_manual_value_delete(**body)` | POST | `/project/analytics/metrics/custom/manual/value/delete` |
+| `funnel_data(**body)` | POST | `/project/reports/funnel/data` |
+| `event_add(**body)` | POST | `/project/analytics/event/add` |
+
+Examples:
+
+```ruby
+Roistat.client.analytics.dimensions
+Roistat.client.analytics.metrics_new
+Roistat.client.analytics.custom_metrics_list
+Roistat.client.analytics.data(
+  period: {from: "2026-01-01T00:00:00+0300", to: "2026-07-31T23:59:59+0300"},
+  metrics: ["visits"],
+  dimensions: ["marker_level_1"]
+)
+```
+
+### Channels — `client.channels`
+
+Official docs: [channels / source costs API](https://help-ru.roistat.com/API/methods/channels/).
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `source_list(**body)` | POST | `/project/analytics/source/list` |
+| `cost_list(**body)` | POST | `/project/analytics/source/cost/list` |
+| `cost_add(**body)` | POST | `/project/analytics/source/cost/add` |
+| `cost_update(**body)` | POST | `/project/analytics/source/cost/update` |
+| `cost_delete(id:)` | POST | `/project/analytics/source/cost/delete` |
+
+Examples:
+
+```ruby
+Roistat.client.channels.source_list
+Roistat.client.channels.cost_list
+```
+
+### Statistics — `client.statistics`
+
+Official docs: [statistics API](https://help-ru.roistat.com/API/methods/statistics/).
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `get_daily(**body)` | POST | `/project/statistics/get-daily` (`period`: `YYYY-MM-DD-YYYY-MM-DD` in UTC; optional `time_zone`, `channel`) |
+
+Examples:
+
+```ruby
+Roistat.client.statistics.get_daily(period: "2026-01-01-2026-07-22")
+```
+
+### Indicators — `client.indicators`
+
+Official docs: [health indicators API](https://help-ru.roistat.com/API/methods/indicators/).
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `list` | GET | `/project/health/indicator/list` |
+| `run_script(indicator_id:)` | POST | `/project/health/indicator/{id}/run-script` |
+
+Examples:
+
+```ruby
+Roistat.client.indicators.list
+Roistat.client.indicators.run_script(indicator_id: 7)
 ```
 
 ## Responses

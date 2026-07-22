@@ -12,3 +12,4 @@
   - `calltracking`
   - `orders`, `proxy_leads`, `leads`, `managers`
   - `clients`, `visits`, `events`
+  - `analytics`, `channels`, `statistics`, `indicators`
