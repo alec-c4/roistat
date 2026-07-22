@@ -158,6 +158,7 @@ High-level helpers are available on every client:
 client.projects
 client.access
 client.billing
+client.calltracking
 ```
 
 Official parameter details live in the [Roistat API docs](https://help-ru.roistat.com/API/methods/about/).
@@ -214,6 +215,43 @@ file = Roistat.client.billing.transactions_export_excel(period: period)
 # String if ≤ 1 MiB, otherwise Tempfile
 ```
 
+### Calltracking — `client.calltracking`
+
+Official docs: [calltracking API](https://help-ru.roistat.com/API/methods/calltracking/). The gem uses POST for these endpoints.
+
+| Ruby method | HTTP | Path | Notes |
+|-------------|------|------|-------|
+| `script_list(**body)` | POST | `/project/calltracking/script/list` | optional body (e.g. `is_deleted:`) |
+| `script_create(**body)` | POST | `/project/calltracking/script/create` | |
+| `script_update(**body)` | POST | `/project/calltracking/script/update` | |
+| `script_delete(id:)` | POST | `/project/calltracking/script/delete` | |
+| `phone_list(**body)` | POST | `/project/calltracking/phone/list` | |
+| `phone_prefix_list(**body)` | POST | `/project/calltracking/phone/prefix/list` | |
+| `phone_create(phones:)` | POST | `/project/calltracking/phone/create` | |
+| `phone_buy(prefix:, count:)` | POST | `/project/calltracking/phone/buy` | |
+| `phone_update(**body)` | POST | `/project/calltracking/phone/update` | |
+| `phone_delete(phones:)` | POST | `/project/calltracking/phone/delete` | phone ids |
+| `call_list(**body)` | POST | `/project/calltracking/call/list` | filters, extend, sort, limit, offset |
+| `call_update(**body)` | POST | `/project/calltracking/call/update` | |
+| `call_delete(ids:)` | POST | `/project/calltracking/call/delete` | |
+| `call_file(call_id:)` | POST | `/project/calltracking/call/{id}/file` | binary (MP3) |
+| `call_xls_export(period:)` | POST | `/project/calltracking/call/xls/export` | binary (XLS) |
+| `data(period:)` | POST | `/project/calltracking/data` | dashboard analytics |
+| `phone_call(**body)` | POST | `/project/phone-call` | create call history row |
+
+Examples:
+
+```ruby
+Roistat.client.calltracking.phone_list
+Roistat.client.calltracking.script_list(is_deleted: 0)
+Roistat.client.calltracking.call_list(
+  filters: {and: [["date", ">", "2026-01-01T00:00:00+0000"]]},
+  limit: 50
+)
+Roistat.client.calltracking.data(period: period)
+audio = Roistat.client.calltracking.call_file(call_id: 1234)
+```
+
 ## Responses
 
 ### JSON
@@ -222,7 +260,7 @@ Successful JSON responses return the parsed body (usually a Hash with string key
 
 ### Binary
 
-With `parse: :binary` (used by Excel export):
+With `parse: :binary` (billing Excel export, calltracking XLS export, call audio):
 
 | Body size | Return type |
 |-----------|-------------|

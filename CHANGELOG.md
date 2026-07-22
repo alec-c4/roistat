@@ -7,4 +7,4 @@
 - Typed API errors (`AuthenticationError`, `AuthorizationError`, `AccessDeniedError`, `RateLimitError`)
 - Binary response handling (`String` ≤ 1 MiB, otherwise `Tempfile`)
 - Rails generator `rails g roistat:install`
-- Resource APIs: `projects`, `access`, `billing`
+- Resource APIs: `projects`, `access`, `billing`, `calltracking`

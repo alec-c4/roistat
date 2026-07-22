@@ -73,6 +73,10 @@ class Roistat::Client
     @billing ||= Roistat::Resources::Billing.new(self)
   end
 
+  def calltracking
+    @calltracking ||= Roistat::Resources::Calltracking.new(self)
+  end
+
   private
 
   def validate_credentials!
