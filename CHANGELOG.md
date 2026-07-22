@@ -1,4 +1,4 @@
-## [0.1.0] — Unreleased
+## [0.1.0] — 2026-07-22
 
 ### Added
 
@@ -13,3 +13,6 @@
   - `orders`, `proxy_leads`, `leads`, `managers`
   - `clients`, `visits`, `events`
   - `analytics`, `channels`, `statistics`, `indicators`
+  - `lead_hunter`, `emailtracking`, `sms`, `mediaplan`, `speech`, `vpbx`
+  - `dashboards`, `widgets`; `access.authorized_users` / `access.change`; `projects.counter_list`
+- Russian documentation at `docs/ru/README.md` (linked from the root README)

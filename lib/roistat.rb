@@ -12,6 +12,8 @@ end
 require_relative "roistat/resources/base"
 require_relative "roistat/resources/projects"
 require_relative "roistat/resources/access"
+require_relative "roistat/resources/dashboards"
+require_relative "roistat/resources/widgets"
 require_relative "roistat/resources/billing"
 require_relative "roistat/resources/calltracking"
 require_relative "roistat/resources/orders"
@@ -25,6 +27,12 @@ require_relative "roistat/resources/analytics"
 require_relative "roistat/resources/channels"
 require_relative "roistat/resources/statistics"
 require_relative "roistat/resources/indicators"
+require_relative "roistat/resources/lead_hunter"
+require_relative "roistat/resources/emailtracking"
+require_relative "roistat/resources/sms"
+require_relative "roistat/resources/mediaplan"
+require_relative "roistat/resources/speech"
+require_relative "roistat/resources/vpbx"
 
 module Roistat
   class << self

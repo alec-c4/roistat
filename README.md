@@ -2,7 +2,11 @@
 
 Ruby wrapper for the [Roistat REST API](https://help-ru.roistat.com/API/methods/about/).
 
+**[Документация на русском](docs/ru/README.md)**
+
 The gem sends every request with the `Api-key` header (never as a `key` query param). Project-scoped calls also send `project` in the query string.
+
+Official docs differ by language. Prefer [help-ru](https://help-ru.roistat.com/API/methods/about/) for the method list. [help-en](https://help.roistat.com/API/methods/about/) documents additional endpoints (dashboards, widgets, and alternate access/counter paths); this gem wraps those as well.
 
 ## Contents
 
@@ -13,6 +17,8 @@ The gem sends every request with the `Api-key` header (never as a `key` query pa
 - [Resource APIs](#resource-apis)
   - [Projects](#projects--clientprojects)
   - [Access](#access--clientaccess)
+  - [Dashboards](#dashboards--clientdashboards)
+  - [Widgets](#widgets--clientwidgets)
   - [Billing](#billing--clientbilling)
   - [Calltracking](#calltracking--clientcalltracking)
   - [Orders](#orders--clientorders)
@@ -26,6 +32,12 @@ The gem sends every request with the `Api-key` header (never as a `key` query pa
   - [Channels](#channels--clientchannels)
   - [Statistics](#statistics--clientstatistics)
   - [Indicators](#indicators--clientindicators)
+  - [Lead hunter](#lead-hunter--clientlead_hunter)
+  - [Email tracking](#email-tracking--clientemailtracking)
+  - [SMS](#sms--clientsms)
+  - [Mediaplan](#mediaplan--clientmediaplan)
+  - [Speech analytics](#speech-analytics--clientspeech)
+  - [Cloud PBX (VPBX)](#cloud-pbx-vpbx--clientvpbx)
 - [Responses](#responses)
 - [Errors](#errors)
 - [Development](#development)
@@ -172,6 +184,8 @@ High-level helpers are available on every client:
 ```ruby
 client.projects
 client.access
+client.dashboards
+client.widgets
 client.billing
 client.calltracking
 client.orders
@@ -181,6 +195,16 @@ client.managers
 client.clients
 client.visits
 client.events
+client.analytics
+client.channels
+client.statistics
+client.indicators
+client.lead_hunter
+client.emailtracking
+client.sms
+client.mediaplan
+client.speech
+client.vpbx
 ```
 
 Official parameter details live in the [Roistat API docs](https://help-ru.roistat.com/API/methods/about/).
@@ -192,6 +216,7 @@ Official parameter details live in the [Roistat API docs](https://help-ru.roista
 | `list` | GET | `/user/projects` | API key only |
 | `create(name:, currency:)` | POST | `/account/project/create` | API key only |
 | `modules_list(method: :get)` | GET or POST | `/project/settings/module/list` | API key + project |
+| `counter_list` | POST | `/project/settings/counter/list` | API key + project (help-en) |
 
 Examples:
 
@@ -200,18 +225,55 @@ Roistat.client.projects.list
 Roistat.client.projects.create(name: "Demo", currency: "RUB")
 Roistat.client.projects.modules_list
 Roistat.client.projects.modules_list(method: :post)
+Roistat.client.projects.counter_list
 ```
 
 ### Access — `client.access`
 
 | Ruby method | HTTP | Path | Auth |
 |-------------|------|------|------|
-| `user_list` | GET | `/project/permissions/user/list` | API key + project |
+| `user_list` | GET | `/project/permissions/user/list` | API key + project (help-ru) |
+| `authorized_users(method: :get)` | GET or POST | `/project/access/get-authorized-users` | API key + project (help-en) |
+| `change(**body)` | POST | `/project/access/change` | API key + project (help-en) |
 
-Example:
+Examples:
 
 ```ruby
 Roistat.client.access.user_list
+Roistat.client.access.authorized_users
+Roistat.client.access.authorized_users(method: :post)
+Roistat.client.access.change(email: "user@example.com", permissions: ["access_analytics_base_read"])
+```
+
+### Dashboards — `client.dashboards`
+
+Documented on [help-en](https://help.roistat.com/API/methods/about/).
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `list` | GET | `/project/dashboards` |
+| `widgets(dashboard_id:)` | GET | `/project/dashboards/{dashboardId}/widgets` |
+
+Examples:
+
+```ruby
+Roistat.client.dashboards.list
+Roistat.client.dashboards.widgets(dashboard_id: 1)
+```
+
+### Widgets — `client.widgets`
+
+Documented on [help-en](https://help.roistat.com/API/methods/about/). Default verb is POST (matches curl examples); pass `method: :get` when needed.
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `data(widget_id:, method: :post, **body)` | GET or POST | `/project/widget/{widgetId}/data` |
+
+Examples:
+
+```ruby
+Roistat.client.widgets.data(widget_id: 9, period: "2026-01-01-2026-01-31")
+Roistat.client.widgets.data(widget_id: 9, method: :get)
 ```
 
 ### Billing — `client.billing`
@@ -500,6 +562,128 @@ Roistat.client.indicators.list
 Roistat.client.indicators.run_script(indicator_id: 7)
 ```
 
+### Lead hunter — `client.lead_hunter`
+
+Official docs: [lead hunter API](https://help-ru.roistat.com/API/methods/lead-hunter/).
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `list(**params)` | GET | `/project/lead-hunter/lead/list` (filters as query params) |
+
+Examples:
+
+```ruby
+Roistat.client.lead_hunter.list
+```
+
+### Email tracking — `client.emailtracking`
+
+Official docs: [email tracking API](https://help-ru.roistat.com/API/methods/emailtracking/).
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `list(**body)` | POST | `/project/emailtracking/email/list` |
+| `attachment(email_id:, attachment_id:)` | GET | `/project/emailtracking/email/{email_id}/attachment/{attachment_id}` (binary) |
+
+Examples:
+
+```ruby
+Roistat.client.emailtracking.list(limit: 10)
+```
+
+### SMS — `client.sms`
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `set_report_enabled(enabled:)` | POST | `/project/set-sms-report-enabled` (`enabled`: `"0"` or `"1"`) |
+
+Examples:
+
+```ruby
+Roistat.client.sms.set_report_enabled(enabled: true)
+```
+
+### Mediaplan — `client.mediaplan`
+
+Official docs: [mediaplan API](https://help-ru.roistat.com/API/methods/mediaplan/).
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `target_list(**body)` | POST | `/project/mediaplan/target/list` |
+| `target_create(**body)` | POST | `/project/mediaplan/target/create` |
+| `target_update(**body)` | POST | `/project/mediaplan/target/update` |
+| `target_delete(id:)` | POST | `/project/mediaplan/target/delete` |
+
+Examples:
+
+```ruby
+Roistat.client.mediaplan.target_list(
+  period: {from: "2026-07-01T00:00:00+0300", to: "2026-07-31T23:59:59+0300"}
+)
+```
+
+### Speech analytics — `client.speech`
+
+**RU help only.** Official docs: [speech analytics API](https://help-ru.roistat.com/API/methods/speech/).
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `call_list(**body)` | POST | `/project/speech/call/list` |
+| `call_list_export_excel(**body)` | POST | `/project/speech/call/list/export/excel` (binary) |
+| `call_add(**body)` | POST | `/project/speech/call/add` |
+| `call_comment_update(**body)` | POST | `/project/speech/call/comment/update` |
+| `call_operator_update(**body)` | POST | `/project/speech/call/operator/update` |
+| `call_transcription_list(**body)` | POST | `/project/speech/call/transcription/list` |
+| `dictionary_list(**body)` | POST | `/project/speech/dictionary/list` |
+| `dictionary_custom_create(**body)` | POST | `/project/speech/dictionary/custom/create` |
+| `dictionary_custom_update(**body)` | POST | `/project/speech/dictionary/custom/update` |
+| `dictionary_custom_delete(**body)` | POST | `/project/speech/dictionary/custom/delete` |
+| `dictionary_custom_phrase_list(**body)` | POST | `/project/speech/dictionary/custom/phrase/list` |
+| `settings_list(**body)` | POST | `/project/speech/settings/list` |
+| `settings_update(**body)` | POST | `/project/speech/settings/update` |
+
+Examples:
+
+```ruby
+Roistat.client.speech.dictionary_list
+Roistat.client.speech.call_list
+```
+
+### Cloud PBX (VPBX) — `client.vpbx`
+
+**RU help only.** Official docs: [VPBX API](https://help-ru.roistat.com/API/methods/vpbx/).
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `call_list(**body)` | POST | `/project/vpbx/call/list` |
+| `operator_list(**body)` | POST | `/project/vpbx/operator/list` |
+| `operator_create(**body)` | POST | `/project/vpbx/operator/create` |
+| `operator_update(**body)` | POST | `/project/vpbx/operator/update` |
+| `operator_deactivate(**body)` | POST | `/project/vpbx/operator/deactivate` |
+| `operator_group_list(**body)` | POST | `/project/vpbx/operator/group/list` |
+| `operator_group_create(**body)` | POST | `/project/vpbx/operator/group/create` |
+| `operator_group_update(**body)` | POST | `/project/vpbx/operator/group/update` |
+| `phone_list(**params)` | GET | `/project/vpbx/phone/list` |
+| `phone_create(**body)` | POST | `/project/vpbx/phone/create` |
+| `phone_update(**body)` | POST | `/project/vpbx/phone/update` |
+| `phone_delete(**body)` | POST | `/project/vpbx/phone/delete` |
+| `script_list(**params)` | GET | `/project/vpbx/script/list` |
+| `script_create(**body)` | POST | `/project/vpbx/script/create` |
+| `script_update(**body)` | POST | `/project/vpbx/script/update` |
+| `script_delete(**body)` | POST | `/project/vpbx/script/delete` |
+| `report_data(**body)` | POST | `/project/vpbx/report/data` |
+| `settings_update(**body)` | POST | `/project/vpbx/settings/update` |
+| `settings_file_audio_upload(file:, **fields)` | POST | `/project/vpbx/settings/file/audio/upload` (multipart) |
+
+`settings_file_audio_upload` sends `multipart/form-data` via `Client#post_multipart`. Pass an IO or open file as `file:`; other keyword args become form fields.
+
+Examples:
+
+```ruby
+Roistat.client.vpbx.phone_list
+Roistat.client.vpbx.script_list
+```
+
 ## Responses
 
 ### JSON
@@ -508,7 +692,7 @@ Successful JSON responses return the parsed body (usually a Hash with string key
 
 ### Binary
 
-With `parse: :binary` (billing Excel export, calltracking XLS export, call audio):
+With `parse: :binary` (billing Excel export, calltracking XLS export, call audio, email attachments, speech call export):
 
 | Body size | Return type |
 |-----------|-------------|

@@ -36,6 +36,31 @@ class Roistat::Client
     request(:post, path, params: params, body: body, parse: parse)
   end
 
+  def post_multipart(path, params: {}, form: {}, parse: :json)
+    validate_project! if @project_required
+
+    query = params.dup
+    query[:project] = project if project && !query.key?(:project) && !query.key?("project")
+
+    headers = {
+      "Api-key" => api_key,
+      "Accept" => "application/json"
+    }
+
+    http_response = session.request(
+      "POST",
+      url_for(path),
+      params: stringify_keys(query),
+      headers: headers,
+      form: normalize_multipart_form(form)
+    )
+    Roistat::Response.parse(
+      http_response,
+      parse: parse,
+      binary_tempfile_threshold: binary_tempfile_threshold
+    )
+  end
+
   def request(method, path, params: {}, body: nil, parse: :json)
     validate_project! if @project_required
 
@@ -67,6 +92,14 @@ class Roistat::Client
 
   def access
     @access ||= Roistat::Resources::Access.new(self)
+  end
+
+  def dashboards
+    @dashboards ||= Roistat::Resources::Dashboards.new(self)
+  end
+
+  def widgets
+    @widgets ||= Roistat::Resources::Widgets.new(self)
   end
 
   def billing
@@ -121,6 +154,30 @@ class Roistat::Client
     @indicators ||= Roistat::Resources::Indicators.new(self)
   end
 
+  def lead_hunter
+    @lead_hunter ||= Roistat::Resources::LeadHunter.new(self)
+  end
+
+  def emailtracking
+    @emailtracking ||= Roistat::Resources::Emailtracking.new(self)
+  end
+
+  def sms
+    @sms ||= Roistat::Resources::Sms.new(self)
+  end
+
+  def mediaplan
+    @mediaplan ||= Roistat::Resources::Mediaplan.new(self)
+  end
+
+  def speech
+    @speech ||= Roistat::Resources::Speech.new(self)
+  end
+
+  def vpbx
+    @vpbx ||= Roistat::Resources::Vpbx.new(self)
+  end
+
   private
 
   def validate_credentials!
@@ -151,5 +208,13 @@ class Roistat::Client
 
   def stringify_keys(hash)
     hash.transform_keys(&:to_s)
+  end
+
+  def normalize_multipart_form(form)
+    form.transform_keys(&:to_s).transform_values do |value|
+      next value if value.respond_to?(:read) || value.is_a?(String)
+
+      value.to_s
+    end
   end
 end

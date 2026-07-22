@@ -67,5 +67,20 @@ RSpec.describe Roistat::Resources::Projects do
           .with(query: {"project" => project})
       end
     end
+
+    describe "#counter_list" do
+      it "POSTs /project/settings/counter/list" do
+        stub_request(:post, "#{base_url}/project/settings/counter/list")
+          .with(query: {"project" => project}, headers: {"Api-key" => api_key})
+          .to_return(
+            status: 200,
+            body: {"data" => [{"id" => "counter-1"}], "status" => "success"}.to_json
+          )
+
+        response = client.projects.counter_list
+
+        expect(response["data"].first["id"]).to eq("counter-1")
+      end
+    end
   end
 end

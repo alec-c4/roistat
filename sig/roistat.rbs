@@ -30,10 +30,13 @@ class Roistat::Client
 
   def get: (String, ?params: Hash[Symbol | String, untyped], ?parse: Symbol) -> untyped
   def post: (String, ?params: Hash[Symbol | String, untyped], ?body: untyped, ?parse: Symbol) -> untyped
+  def post_multipart: (String, ?params: Hash[Symbol | String, untyped], ?form: Hash[Symbol | String, untyped], ?parse: Symbol) -> untyped
   def request: (Symbol | String, String, ?params: Hash[Symbol | String, untyped], ?body: untyped, ?parse: Symbol) -> untyped
 
   def projects: () -> Roistat::Resources::Projects
   def access: () -> Roistat::Resources::Access
+  def dashboards: () -> Roistat::Resources::Dashboards
+  def widgets: () -> Roistat::Resources::Widgets
   def billing: () -> Roistat::Resources::Billing
   def calltracking: () -> Roistat::Resources::Calltracking
   def orders: () -> Roistat::Resources::Orders
@@ -47,6 +50,34 @@ class Roistat::Client
   def channels: () -> Roistat::Resources::Channels
   def statistics: () -> Roistat::Resources::Statistics
   def indicators: () -> Roistat::Resources::Indicators
+  def lead_hunter: () -> Roistat::Resources::LeadHunter
+  def emailtracking: () -> Roistat::Resources::Emailtracking
+  def sms: () -> Roistat::Resources::Sms
+  def mediaplan: () -> Roistat::Resources::Mediaplan
+  def speech: () -> Roistat::Resources::Speech
+  def vpbx: () -> Roistat::Resources::Vpbx
+end
+
+class Roistat::Resources::Projects
+  def list: () -> untyped
+  def create: (name: String, currency: String) -> untyped
+  def modules_list: (?method: Symbol) -> untyped
+  def counter_list: () -> untyped
+end
+
+class Roistat::Resources::Access
+  def user_list: () -> untyped
+  def authorized_users: (?method: Symbol) -> untyped
+  def change: (**untyped) -> untyped
+end
+
+class Roistat::Resources::Dashboards
+  def list: () -> untyped
+  def widgets: (dashboard_id: Integer | String) -> untyped
+end
+
+class Roistat::Resources::Widgets
+  def data: (widget_id: Integer | String, ?method: Symbol, **untyped) -> untyped
 end
 
 class Roistat::Resources::Calltracking
@@ -156,6 +187,64 @@ end
 class Roistat::Resources::Indicators
   def list: () -> untyped
   def run_script: (indicator_id: Integer | String) -> untyped
+end
+
+class Roistat::Resources::LeadHunter
+  def list: (**untyped) -> untyped
+end
+
+class Roistat::Resources::Emailtracking
+  def list: (**untyped) -> untyped
+  def attachment: (email_id: Integer | String, attachment_id: Integer | String) -> untyped
+end
+
+class Roistat::Resources::Sms
+  def set_report_enabled: (enabled: bool | Integer | String) -> untyped
+end
+
+class Roistat::Resources::Mediaplan
+  def target_list: (**untyped) -> untyped
+  def target_create: (**untyped) -> untyped
+  def target_update: (**untyped) -> untyped
+  def target_delete: (id: Integer | String) -> untyped
+end
+
+class Roistat::Resources::Speech
+  def call_list: (**untyped) -> untyped
+  def call_list_export_excel: (**untyped) -> untyped
+  def call_add: (**untyped) -> untyped
+  def call_comment_update: (**untyped) -> untyped
+  def call_operator_update: (**untyped) -> untyped
+  def call_transcription_list: (**untyped) -> untyped
+  def dictionary_list: (**untyped) -> untyped
+  def dictionary_custom_create: (**untyped) -> untyped
+  def dictionary_custom_update: (**untyped) -> untyped
+  def dictionary_custom_delete: (**untyped) -> untyped
+  def dictionary_custom_phrase_list: (**untyped) -> untyped
+  def settings_list: (**untyped) -> untyped
+  def settings_update: (**untyped) -> untyped
+end
+
+class Roistat::Resources::Vpbx
+  def call_list: (**untyped) -> untyped
+  def operator_list: (**untyped) -> untyped
+  def operator_create: (**untyped) -> untyped
+  def operator_update: (**untyped) -> untyped
+  def operator_deactivate: (**untyped) -> untyped
+  def operator_group_list: (**untyped) -> untyped
+  def operator_group_create: (**untyped) -> untyped
+  def operator_group_update: (**untyped) -> untyped
+  def phone_list: (**untyped) -> untyped
+  def phone_create: (**untyped) -> untyped
+  def phone_update: (**untyped) -> untyped
+  def phone_delete: (**untyped) -> untyped
+  def script_list: (**untyped) -> untyped
+  def script_create: (**untyped) -> untyped
+  def script_update: (**untyped) -> untyped
+  def script_delete: (**untyped) -> untyped
+  def report_data: (**untyped) -> untyped
+  def settings_update: (**untyped) -> untyped
+  def settings_file_audio_upload: (file: IO, **untyped) -> untyped
 end
 
 class Roistat::Error < StandardError

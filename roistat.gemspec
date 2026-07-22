@@ -9,14 +9,16 @@ Gem::Specification.new do |spec|
   spec.email = ["alexey.poimtsev@gmail.com"]
 
   spec.summary = "Ruby wrapper for the Roistat REST API."
-  spec.description = "Ruby wrapper for the Roistat REST API. Authenticate with an API key and project id to call Roistat endpoints (leads, call tracking, and other project methods)."
+  spec.description = "Ruby wrapper for the Roistat REST API. Configure with an API key and project id, then call documented Roistat endpoints through resource helpers or low-level get/post."
   spec.homepage = "https://github.com/alec-c4/roistat"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.3.0"
 
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/alec-c4/roistat"
   spec.metadata["changelog_uri"] = "https://github.com/alec-c4/roistat/blob/master/CHANGELOG.md"
+  spec.metadata["documentation_uri"] = "https://github.com/alec-c4/roistat/blob/master/README.md"
   spec.metadata["rubygems_mfa_required"] = "true"
 
   # Specify which files should be added to the gem when it is released.
