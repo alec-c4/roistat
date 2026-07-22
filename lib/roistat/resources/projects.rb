@@ -11,7 +11,7 @@ class Roistat::Resources::Projects < Roistat::Resources::Base
     api_key_client.post("account/project/create", body: {name: name, currency: currency})
   end
 
-  # GET|POST /project/settings/module/list — project-scoped.
+  # GET|POST /project/settings/module/list — project-scoped (help-ru).
   def modules_list(method: :get)
     case method.to_sym
     when :get
@@ -21,5 +21,10 @@ class Roistat::Resources::Projects < Roistat::Resources::Base
     else
       raise ArgumentError, "method must be :get or :post"
     end
+  end
+
+  # POST /project/settings/counter/list — same product idea as modules_list; listed on help-en.
+  def counter_list
+    client.post("project/settings/counter/list")
   end
 end
