@@ -1,4 +1,37 @@
 module Roistat
   VERSION: String
-  # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+
+  def self.configuration: () -> Configuration
+  def self.configure: () { (Configuration) -> void } -> void
+  def self.reset_configuration!: () -> void
+  def self.client: () -> Client
+end
+
+class Roistat::Configuration
+  DEFAULT_BASE_URL: String
+  attr_accessor api_key: String?
+  attr_accessor project: String?
+  attr_accessor base_url: String
+  attr_accessor timeout: Integer
+  attr_accessor open_timeout: Integer
+  attr_accessor binary_tempfile_threshold: Integer
+end
+
+class Roistat::Client
+  def initialize: (
+    api_key: String,
+    ?project: String?,
+    ?project_required: bool,
+    ?base_url: String?,
+    ?timeout: Integer?,
+    ?open_timeout: Integer?,
+    ?binary_tempfile_threshold: Integer?
+  ) -> void
+
+  def get: (String, ?params: Hash[Symbol | String, untyped], ?parse: Symbol) -> untyped
+  def post: (String, ?params: Hash[Symbol | String, untyped], ?body: untyped, ?parse: Symbol) -> untyped
+  def request: (Symbol | String, String, ?params: Hash[Symbol | String, untyped], ?body: untyped, ?parse: Symbol) -> untyped
+end
+
+class Roistat::Error < StandardError
 end

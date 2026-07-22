@@ -2,73 +2,281 @@
 
 Ruby wrapper for the [Roistat REST API](https://help-ru.roistat.com/API/methods/about/).
 
-Use it to call Roistat project endpoints with an API key and project id — for example leads, call tracking, and other methods from the official docs.
+The gem sends every request with the `Api-key` header (never as a `key` query param). Project-scoped calls also send `project` in the query string.
+
+## Contents
+
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Clients](#clients)
+- [Low-level HTTP API](#low-level-http-api)
+- [Resource APIs](#resource-apis)
+- [Responses](#responses)
+- [Errors](#errors)
+- [Development](#development)
+- [License](#license)
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add the gem to the Gemfile:
 
 ```ruby
 gem "roistat"
 ```
 
-And then execute:
+Then run:
 
 ```bash
 bundle install
 ```
 
-Or install it yourself as:
+Or install it directly:
 
 ```bash
 gem install roistat
 ```
 
-## Usage
-
 ### Rails
 
+Generate the initializer:
+
 ```bash
-bundle add roistat
 rails generate roistat:install
 ```
 
-Set `ROISTAT_API_KEY` and `ROISTAT_PROJECT_ID`, then:
+This creates `config/initializers/roistat.rb` with all configuration options.
+
+## Configuration
+
+### Global config (Rails-friendly)
 
 ```ruby
-Roistat.client.get("project/calltracking/phone/list")
-Roistat.client.post("project/events/send", body: {name: "purchase"})
+Roistat.configure do |config|
+  config.api_key = ENV.fetch("ROISTAT_API_KEY")
+  config.project = ENV.fetch("ROISTAT_PROJECT_ID")
+
+  # Optional:
+  # config.base_url = "https://cloud.roistat.com/api/v1"
+  # config.timeout = 30
+  # config.open_timeout = 10
+  # config.binary_tempfile_threshold = 1_048_576
+end
 ```
+
+Then use the shared client:
+
+```ruby
+Roistat.client.projects.list
+```
+
+### Configuration options
+
+| Option | Required | Default | Description |
+|--------|----------|---------|-------------|
+| `api_key` | yes | — | Roistat API key (`Api-key` header) |
+| `project` | yes for project-scoped calls | — | Project id (query `project`) |
+| `base_url` | no | `https://cloud.roistat.com/api/v1` | API base URL |
+| `timeout` | no | `30` | Request timeout in seconds |
+| `open_timeout` | no | `10` | Connection open timeout in seconds |
+| `binary_tempfile_threshold` | no | `1048576` (1 MiB) | Binary bodies larger than this become a `Tempfile` |
+
+### Environment variables (install generator)
+
+| Variable | Maps to |
+|----------|---------|
+| `ROISTAT_API_KEY` | `config.api_key` |
+| `ROISTAT_PROJECT_ID` | `config.project` |
+| `ROISTAT_BASE_URL` | `config.base_url` (commented in template) |
+| `ROISTAT_TIMEOUT` | `config.timeout` (commented) |
+| `ROISTAT_OPEN_TIMEOUT` | `config.open_timeout` (commented) |
+| `ROISTAT_BINARY_TEMPFILE_THRESHOLD` | `config.binary_tempfile_threshold` (commented) |
+
+## Clients
+
+### Shared client
+
+`Roistat.client` builds a client from the global configuration.
 
 ### Explicit client
 
+Use a dedicated instance when you need another project or key:
+
 ```ruby
-client = Roistat::Client.new(api_key: "…", project: "12345")
-client.get("project/calltracking/phone/list")
+client = Roistat::Client.new(
+  api_key: "…",
+  project: "12345",
+  timeout: 20
+)
+
+client.access.user_list
 ```
 
-### Account-level calls (API key only)
+### API-key-only client
+
+Some account endpoints do not need a project id:
 
 ```ruby
 client = Roistat::Client.new(api_key: "…", project_required: false)
 client.get("user/projects")
 ```
 
-The gem always sends the API key via the `Api-key` header (never as a `key` query param). High-level resource methods will land in later releases; use `#get` / `#post` / `#request` for any documented path today.
+Resource helpers that are API-key-only (`projects.list`, `projects.create`) create that client internally.
 
-See the [Roistat API documentation](https://help-ru.roistat.com/API/methods/about/) for endpoints and parameters.
+Blank or whitespace-only credentials raise `Roistat::ConfigurationError` before any HTTP call.
+
+## Low-level HTTP API
+
+Use these for any documented Roistat path that does not have a resource method yet:
+
+```ruby
+client.get("project/calltracking/phone/list", params: {limit: 10})
+client.post("project/events/send", body: {name: "purchase"})
+client.request(:get, "project/permissions/user/list")
+```
+
+### Method signatures
+
+| Method | Purpose |
+|--------|---------|
+| `get(path, params: {}, parse: :json)` | GET request |
+| `post(path, params: {}, body: nil, parse: :json)` | POST request |
+| `request(method, path, params: {}, body: nil, parse: :json)` | Arbitrary verb |
+
+Notes:
+
+- `path` is relative to `base_url` (leading slash is optional).
+- `params` become query parameters. The client adds `project` automatically when the client has a project id.
+- `body` is JSON-encoded. The gem sets `Content-Type: application/json`.
+- `parse: :json` (default) returns a parsed Hash/Array.
+- `parse: :binary` returns a `String` or `Tempfile` (see [Responses](#responses)).
+
+## Resource APIs
+
+High-level helpers are available on every client:
+
+```ruby
+client.projects
+client.access
+client.billing
+```
+
+Official parameter details live in the [Roistat API docs](https://help-ru.roistat.com/API/methods/about/).
+
+### Projects — `client.projects`
+
+| Ruby method | HTTP | Path | Auth |
+|-------------|------|------|------|
+| `list` | GET | `/user/projects` | API key only |
+| `create(name:, currency:)` | POST | `/account/project/create` | API key only |
+| `modules_list(method: :get)` | GET or POST | `/project/settings/module/list` | API key + project |
+
+Examples:
+
+```ruby
+Roistat.client.projects.list
+Roistat.client.projects.create(name: "Demo", currency: "RUB")
+Roistat.client.projects.modules_list
+Roistat.client.projects.modules_list(method: :post)
+```
+
+### Access — `client.access`
+
+| Ruby method | HTTP | Path | Auth |
+|-------------|------|------|------|
+| `user_list` | GET | `/project/permissions/user/list` | API key + project |
+
+Example:
+
+```ruby
+Roistat.client.access.user_list
+```
+
+### Billing — `client.billing`
+
+| Ruby method | HTTP | Path | Auth | Response |
+|-------------|------|------|------|----------|
+| `transactions_list(period:)` | POST | `/user/billing/transactions/list` | API key + project | JSON |
+| `transactions_export_excel(period:)` | POST | `/user/billing/transactions/list/export/excel` | API key + project | binary |
+
+`period` must include `from` and `to` (Roistat date strings).
+
+Examples:
+
+```ruby
+period = {
+  from: "2026-01-01T00:00:00+0300",
+  to: "2026-07-22T23:59:59+0300"
+}
+
+Roistat.client.billing.transactions_list(period: period)
+
+file = Roistat.client.billing.transactions_export_excel(period: period)
+# String if ≤ 1 MiB, otherwise Tempfile
+```
+
+## Responses
+
+### JSON
+
+Successful JSON responses return the parsed body (usually a Hash with string keys).
+
+### Binary
+
+With `parse: :binary` (used by Excel export):
+
+| Body size | Return type |
+|-----------|-------------|
+| ≤ `binary_tempfile_threshold` (default 1 MiB) | `String` |
+| \> threshold | `Tempfile` (caller should close/unlink) |
+
+## Errors
+
+Roistat API errors with `"status": "error"` map to typed exceptions:
+
+| Roistat `error` code | Exception |
+|----------------------|-----------|
+| `authentication_failed` | `Roistat::AuthenticationError` |
+| `authorization_failed` | `Roistat::AuthorizationError` |
+| `access_denied` | `Roistat::AccessDeniedError` |
+| `request_limit_error` | `Roistat::RateLimitError` |
+| other / unknown | `Roistat::Error` |
+
+Invalid local config raises `Roistat::ConfigurationError`.
+
+Error instances may expose:
+
+- `code` — Roistat error code
+- `http_status` — HTTP status
+- `response_body` — parsed body when available
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `bundle exec rake` to run the specs and RuboCop. You can also run `bin/console` for an interactive prompt.
+```bash
+bin/setup
+bundle exec rake          # RSpec + RuboCop
+# or
+mise test
+mise lint
+```
 
-Install Lefthook once so pre-commit hooks run RuboCop and RSpec:
+Install Lefthook once for pre-commit hooks:
 
 ```bash
 bundle exec lefthook install
 ```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+Interactive console:
+
+```bash
+bin/console
+```
+
+Release:
+
+```bash
+mise release
+# or: bundle exec rake release
+```
 
 ## Contributing
 
