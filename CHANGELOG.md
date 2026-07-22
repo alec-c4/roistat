@@ -11,3 +11,4 @@
   - `projects`, `access`, `billing`
   - `calltracking`
   - `orders`, `proxy_leads`, `leads`, `managers`
+  - `clients`, `visits`, `events`

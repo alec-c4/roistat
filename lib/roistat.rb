@@ -18,6 +18,9 @@ require_relative "roistat/resources/orders"
 require_relative "roistat/resources/proxy_leads"
 require_relative "roistat/resources/leads"
 require_relative "roistat/resources/managers"
+require_relative "roistat/resources/clients"
+require_relative "roistat/resources/visits"
+require_relative "roistat/resources/events"
 
 module Roistat
   class << self

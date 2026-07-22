@@ -19,6 +19,9 @@ The gem sends every request with the `Api-key` header (never as a `key` query pa
   - [Proxy leads](#proxy-leads--clientproxy_leads)
   - [Leads](#leads--clientleads)
   - [Managers](#managers--clientmanagers)
+  - [Clients](#clients--clientclients)
+  - [Visits](#visits--clientvisits)
+  - [Events](#events--clientevents)
 - [Responses](#responses)
 - [Errors](#errors)
 - [Development](#development)
@@ -171,6 +174,9 @@ client.orders
 client.proxy_leads
 client.leads
 client.managers
+client.clients
+client.visits
+client.events
 ```
 
 Official parameter details live in the [Roistat API docs](https://help-ru.roistat.com/API/methods/about/).
@@ -350,6 +356,62 @@ Examples:
 ```ruby
 Roistat.client.managers.list
 Roistat.client.managers.add(id: "12345", name: "Petrov", email: "a@b.c")
+```
+
+### Clients — `client.clients`
+
+Official docs: [clients API](https://help-ru.roistat.com/API/methods/clients/).
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `list(**body)` | POST | `/project/clients` |
+| `import(clients)` | POST | `/project/clients/import` (JSON array body) |
+| `detail_feed(client:)` | GET | `/project/clients/detail/feed` (`client` query) |
+| `campaign_list(**body)` | POST | `/project/clients/campaign/list` |
+| `campaign_contact_list(**body)` | POST | `/project/clients/campaign/contact/list` |
+
+Examples:
+
+```ruby
+Roistat.client.clients.list(limit: 100)
+Roistat.client.clients.detail_feed(client: "123")
+Roistat.client.clients.import([{id: "111", name: "Valera"}])
+```
+
+### Visits — `client.visits`
+
+Official docs: [visits API](https://help-ru.roistat.com/API/methods/visit/).
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `list(**body)` | POST | `/project/site/visit/list` |
+| `params_update(**body)` | POST | `/project/site/visit/params/update` |
+
+Examples:
+
+```ruby
+Roistat.client.visits.list(limit: 100)
+Roistat.client.visits.params_update(visit: "123", roistat_param1: "onlineshop")
+```
+
+### Events — `client.events`
+
+Official docs: [events API](https://help-ru.roistat.com/API/methods/events/).
+`send_event` avoids shadowing Ruby `Kernel#send`.
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `send_event(**body)` | POST | `/project/events/send` |
+| `bulk_send(events)` | POST | `/project/events/bulk/send` (JSON array) |
+| `add(events)` | POST | `/project/events/add` (JSON array) |
+| `log(**params)` | GET | `/project/events/log` (filters as query params) |
+| `archive(event_id:, events:)` | POST | `/project/events/meta/{id}/archive` (JSON array) |
+
+Examples:
+
+```ruby
+Roistat.client.events.log(name: "Cart")
+Roistat.client.events.send_event(name: "Purchase", visit: "100001")
 ```
 
 ## Responses
