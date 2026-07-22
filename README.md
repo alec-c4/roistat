@@ -744,7 +744,8 @@ bin/console
 Release:
 
 ```bash
-mise release
+mise release            # build gem, create tag, push gem + tag
+mise github-release     # create GitHub Release for v$VERSION (needs gh + existing tag)
 # or: bundle exec rake release
 ```
 

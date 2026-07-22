@@ -12,3 +12,15 @@ run = "bundle exec rubocop"
 [tasks.release]
 description = "Build and publish the gem (rake release)"
 run = "bundle exec rake release"
+
+[tasks.github-release]
+description = "Create a GitHub Release for the current VERSION tag"
+run = """
+version="$(ruby -e 'require_relative \"lib/roistat/version\"; print Roistat::VERSION')"
+tag="v${version}"
+if ! git rev-parse "${tag}" >/dev/null 2>&1; then
+  echo "Missing tag ${tag}. Create and push it first (or run mise release)." >&2
+  exit 1
+fi
+gh release create "${tag}" --title "${tag}" --generate-notes
+"""
