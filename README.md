@@ -26,9 +26,37 @@ gem install roistat
 
 ## Usage
 
-TODO: Write usage instructions here once the client API is implemented.
+### Rails
 
-See the [Roistat API documentation](https://help-ru.roistat.com/API/methods/about/) for available methods, auth (`Api-key` header or `key` query param), and request/response formats.
+```bash
+bundle add roistat
+rails generate roistat:install
+```
+
+Set `ROISTAT_API_KEY` and `ROISTAT_PROJECT_ID`, then:
+
+```ruby
+Roistat.client.get("project/calltracking/phone/list")
+Roistat.client.post("project/events/send", body: {name: "purchase"})
+```
+
+### Explicit client
+
+```ruby
+client = Roistat::Client.new(api_key: "…", project: "12345")
+client.get("project/calltracking/phone/list")
+```
+
+### Account-level calls (API key only)
+
+```ruby
+client = Roistat::Client.new(api_key: "…", project_required: false)
+client.get("user/projects")
+```
+
+The gem always sends the API key via the `Api-key` header (never as a `key` query param). High-level resource methods will land in later releases; use `#get` / `#post` / `#request` for any documented path today.
+
+See the [Roistat API documentation](https://help-ru.roistat.com/API/methods/about/) for endpoints and parameters.
 
 ## Development
 

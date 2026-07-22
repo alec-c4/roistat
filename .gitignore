@@ -12,3 +12,6 @@
 
 # Gem build artifacts
 *.gem
+
+# Agent planning artifacts
+.ai/
