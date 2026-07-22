@@ -77,6 +77,22 @@ class Roistat::Client
     @calltracking ||= Roistat::Resources::Calltracking.new(self)
   end
 
+  def orders
+    @orders ||= Roistat::Resources::Orders.new(self)
+  end
+
+  def proxy_leads
+    @proxy_leads ||= Roistat::Resources::ProxyLeads.new(self)
+  end
+
+  def leads
+    @leads ||= Roistat::Resources::Leads.new(self)
+  end
+
+  def managers
+    @managers ||= Roistat::Resources::Managers.new(self)
+  end
+
   private
 
   def validate_credentials!
