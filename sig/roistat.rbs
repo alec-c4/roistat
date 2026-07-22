@@ -36,6 +36,10 @@ class Roistat::Client
   def access: () -> Roistat::Resources::Access
   def billing: () -> Roistat::Resources::Billing
   def calltracking: () -> Roistat::Resources::Calltracking
+  def orders: () -> Roistat::Resources::Orders
+  def proxy_leads: () -> Roistat::Resources::ProxyLeads
+  def leads: () -> Roistat::Resources::Leads
+  def managers: () -> Roistat::Resources::Managers
 end
 
 class Roistat::Resources::Calltracking
@@ -56,6 +60,41 @@ class Roistat::Resources::Calltracking
   def call_xls_export: (period: Hash[Symbol | String, untyped]) -> untyped
   def data: (period: Hash[Symbol | String, untyped]) -> untyped
   def phone_call: (**untyped) -> untyped
+end
+
+class Roistat::Resources::Orders
+  def list: (**untyped) -> untyped
+  def add: (Array[untyped]) -> untyped
+  def info: (order_id: Integer | String) -> untyped
+  def external_url: (order_id: Integer | String) -> untyped
+  def status_list: (**untyped) -> untyped
+  def set_statuses: (Array[untyped]) -> untyped
+  def custom_fields: (**untyped) -> untyped
+  def status_update: (order_id: Integer | String, status_id: Integer | String) -> untyped
+  def goal_update: (order_id: Integer | String, **untyped) -> untyped
+  def update: (orders: Array[untyped]) -> untyped
+  def delete: (order_id: Integer | String) -> untyped
+  def delete_many: (ids: Array[Integer | String]) -> untyped
+end
+
+class Roistat::Resources::ProxyLeads
+  def list: (period: String) -> untyped
+  def duplicates: (period: String) -> untyped
+  def get: (id: Integer | String) -> untyped
+end
+
+class Roistat::Resources::Leads
+  def list: (**untyped) -> untyped
+  def status_list: (**untyped) -> untyped
+  def create: (**untyped) -> untyped
+  def update: (**untyped) -> untyped
+end
+
+class Roistat::Resources::Managers
+  def list: (**untyped) -> untyped
+  def add: (**untyped) -> untyped
+  def update: (**untyped) -> untyped
+  def delete: (id: Integer | String) -> untyped
 end
 
 class Roistat::Error < StandardError

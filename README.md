@@ -11,6 +11,14 @@ The gem sends every request with the `Api-key` header (never as a `key` query pa
 - [Clients](#clients)
 - [Low-level HTTP API](#low-level-http-api)
 - [Resource APIs](#resource-apis)
+  - [Projects](#projects--clientprojects)
+  - [Access](#access--clientaccess)
+  - [Billing](#billing--clientbilling)
+  - [Calltracking](#calltracking--clientcalltracking)
+  - [Orders](#orders--clientorders)
+  - [Proxy leads](#proxy-leads--clientproxy_leads)
+  - [Leads](#leads--clientleads)
+  - [Managers](#managers--clientmanagers)
 - [Responses](#responses)
 - [Errors](#errors)
 - [Development](#development)
@@ -159,6 +167,10 @@ client.projects
 client.access
 client.billing
 client.calltracking
+client.orders
+client.proxy_leads
+client.leads
+client.managers
 ```
 
 Official parameter details live in the [Roistat API docs](https://help-ru.roistat.com/API/methods/about/).
@@ -250,6 +262,94 @@ Roistat.client.calltracking.call_list(
 )
 Roistat.client.calltracking.data(period: period)
 audio = Roistat.client.calltracking.call_file(call_id: 1234)
+```
+
+### Orders — `client.orders`
+
+Official docs: [orders API](https://help-ru.roistat.com/API/methods/orders/).
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `list(**body)` | POST | `/project/integration/order/list` |
+| `add(orders)` | POST | `/project/add-orders` (JSON array body) |
+| `info(order_id:)` | GET | `/project/orders/{id}/info` |
+| `external_url(order_id:)` | GET | `/project/orders/{id}/external-url` |
+| `status_list(**body)` | POST | `/project/integration/status/list` |
+| `set_statuses(statuses)` | POST | `/project/set-statuses` (JSON array body) |
+| `custom_fields(**body)` | POST | `/project/analytics/order-custom-fields` |
+| `status_update(order_id:, status_id:)` | POST | `/project/integration/order/{id}/status/update` |
+| `goal_update(order_id:, **body)` | POST | `/project/integration/order/{id}/goal/update` |
+| `update(orders:)` | POST | `/project/integration/order/update` |
+| `delete(order_id:)` | POST | `/project/integration/order/{id}/delete` |
+| `delete_many(ids:)` | POST | `/project/integration/order/delete` |
+
+Examples:
+
+```ruby
+Roistat.client.orders.list(limit: 50)
+Roistat.client.orders.status_list
+Roistat.client.orders.info(order_id: "order_12345")
+Roistat.client.orders.add([
+  {id: "1", name: "New order", date_create: "2022-06-19T00:32:12+0000"}
+])
+```
+
+### Proxy leads — `client.proxy_leads`
+
+Official docs: [proxy leads API](https://help-ru.roistat.com/API/methods/proxy-leads/).
+`period` is `YYYY-MM-DD-YYYY-MM-DD` in the query string.
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `list(period:)` | GET | `/project/proxy-leads` |
+| `duplicates(period:)` | GET | `/project/proxy-leads/duplicates` |
+| `get(id:)` | GET | `/project/proxy-leads/{id}` |
+
+Examples:
+
+```ruby
+Roistat.client.proxy_leads.list(period: "2026-01-01-2026-07-22")
+Roistat.client.proxy_leads.get(id: "2")
+```
+
+### Leads — `client.leads`
+
+Official docs: [lead management API](https://help-ru.roistat.com/API/methods/lead_management/).
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `list(**body)` | POST | `/project/leads/lead/list` |
+| `status_list(**body)` | POST | `/project/leads/status/list` |
+| `create(**body)` | POST | `/project/leads/lead/create` |
+| `update(**body)` | POST | `/project/leads/lead/update` |
+
+Examples:
+
+```ruby
+Roistat.client.leads.status_list
+Roistat.client.leads.list(
+  period: {from: "2023-10-17T21:00:00.000Z", to: "2023-11-30T20:59:59.999Z"},
+  sort_field: "creation_date",
+  limit: 20
+)
+```
+
+### Managers — `client.managers`
+
+Official docs: [managers API](https://help-ru.roistat.com/API/methods/managers/).
+
+| Ruby method | HTTP | Path |
+|-------------|------|------|
+| `list(**body)` | POST | `/project/integration/manager/list` |
+| `add(**body)` | POST | `/project/integration/manager/add` |
+| `update(**body)` | POST | `/project/integration/manager/update` |
+| `delete(id:)` | POST | `/project/integration/manager/delete` |
+
+Examples:
+
+```ruby
+Roistat.client.managers.list
+Roistat.client.managers.add(id: "12345", name: "Petrov", email: "a@b.c")
 ```
 
 ## Responses
