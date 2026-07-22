@@ -40,6 +40,9 @@ class Roistat::Client
   def proxy_leads: () -> Roistat::Resources::ProxyLeads
   def leads: () -> Roistat::Resources::Leads
   def managers: () -> Roistat::Resources::Managers
+  def clients: () -> Roistat::Resources::Clients
+  def visits: () -> Roistat::Resources::Visits
+  def events: () -> Roistat::Resources::Events
 end
 
 class Roistat::Resources::Calltracking
@@ -95,6 +98,27 @@ class Roistat::Resources::Managers
   def add: (**untyped) -> untyped
   def update: (**untyped) -> untyped
   def delete: (id: Integer | String) -> untyped
+end
+
+class Roistat::Resources::Clients
+  def list: (**untyped) -> untyped
+  def import: (Array[untyped]) -> untyped
+  def detail_feed: (client: Integer | String) -> untyped
+  def campaign_list: (**untyped) -> untyped
+  def campaign_contact_list: (**untyped) -> untyped
+end
+
+class Roistat::Resources::Visits
+  def list: (**untyped) -> untyped
+  def params_update: (**untyped) -> untyped
+end
+
+class Roistat::Resources::Events
+  def send_event: (**untyped) -> untyped
+  def bulk_send: (Array[untyped]) -> untyped
+  def add: (Array[untyped]) -> untyped
+  def log: (**untyped) -> untyped
+  def archive: (event_id: Integer | String, events: Array[untyped]) -> untyped
 end
 
 class Roistat::Error < StandardError

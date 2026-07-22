@@ -93,6 +93,18 @@ class Roistat::Client
     @managers ||= Roistat::Resources::Managers.new(self)
   end
 
+  def clients
+    @clients ||= Roistat::Resources::Clients.new(self)
+  end
+
+  def visits
+    @visits ||= Roistat::Resources::Visits.new(self)
+  end
+
+  def events
+    @events ||= Roistat::Resources::Events.new(self)
+  end
+
   private
 
   def validate_credentials!
