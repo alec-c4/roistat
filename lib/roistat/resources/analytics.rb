@@ -3,7 +3,7 @@
 class Roistat::Resources::Analytics < Roistat::Resources::Base
   # POST /project/analytics/data
   def data(**body)
-    post_optional_body("project/analytics/data", body)
+    client.post("project/analytics/data", body: body)
   end
 
   # POST /project/analytics/data/export/excel
@@ -13,27 +13,27 @@ class Roistat::Resources::Analytics < Roistat::Resources::Base
 
   # POST /project/analytics/metrics-new
   def metrics_new(**body)
-    post_optional_body("project/analytics/metrics-new", body)
+    client.post("project/analytics/metrics-new", body: body)
   end
 
   # POST /project/analytics/dimensions
   def dimensions(**body)
-    post_optional_body("project/analytics/dimensions", body)
+    client.post("project/analytics/dimensions", body: body)
   end
 
   # POST /project/analytics/dimension-values
   def dimension_values(**body)
-    post_optional_body("project/analytics/dimension-values", body)
+    client.post("project/analytics/dimension-values", body: body)
   end
 
   # POST /project/analytics/attribution-models
   def attribution_models(**body)
-    post_optional_body("project/analytics/attribution-models", body)
+    client.post("project/analytics/attribution-models", body: body)
   end
 
   # POST /project/analytics/list-orders
   def list_orders(**body)
-    post_optional_body("project/analytics/list-orders", body)
+    client.post("project/analytics/list-orders", body: body)
   end
 
   # GET /project/analytics/metrics/custom/list
@@ -43,7 +43,7 @@ class Roistat::Resources::Analytics < Roistat::Resources::Base
 
   # POST /project/analytics/metrics/custom/manual/value/list
   def custom_manual_value_list(**body)
-    post_optional_body("project/analytics/metrics/custom/manual/value/list", body)
+    client.post("project/analytics/metrics/custom/manual/value/list", body: body)
   end
 
   # POST /project/analytics/metrics/custom/manual/value/add
@@ -58,7 +58,7 @@ class Roistat::Resources::Analytics < Roistat::Resources::Base
 
   # POST /project/reports/funnel/data
   def funnel_data(**body)
-    post_optional_body("project/reports/funnel/data", body)
+    client.post("project/reports/funnel/data", body: body)
   end
 
   # POST /project/analytics/event/add

@@ -3,7 +3,7 @@
 class Roistat::Resources::Mediaplan < Roistat::Resources::Base
   # POST /project/mediaplan/target/list
   def target_list(**body)
-    post_optional_body("project/mediaplan/target/list", body)
+    client.post("project/mediaplan/target/list", body: body)
   end
 
   # POST /project/mediaplan/target/create

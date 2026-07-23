@@ -32,6 +32,14 @@ RSpec.describe Roistat::Resources::Orders do
       expect(client.orders.info(order_id: "order_1")["order"]["id"]).to eq("order_1")
     end
 
+    it "#info escapes special characters in order_id so they can't alter the request path" do
+      stub_request(:get, "#{base_url}/project/orders/a%2Fb%20c/info")
+        .with(query: {"project" => project})
+        .to_return(status: 200, body: {"order" => {"id" => "a/b c"}, "status" => "success"}.to_json)
+
+      expect(client.orders.info(order_id: "a/b c")["order"]["id"]).to eq("a/b c")
+    end
+
     it "#external_url GETs /project/orders/{id}/external-url" do
       stub_request(:get, "#{base_url}/project/orders/order_1/external-url")
         .with(query: {"project" => project})

@@ -3,7 +3,7 @@
 class Roistat::Resources::Managers < Roistat::Resources::Base
   # POST /project/integration/manager/list
   def list(**body)
-    post("project/integration/manager/list", body: body)
+    client.post("project/integration/manager/list", body: body)
   end
 
   # POST /project/integration/manager/add
@@ -19,15 +19,5 @@ class Roistat::Resources::Managers < Roistat::Resources::Base
   # POST /project/integration/manager/delete
   def delete(id:)
     client.post("project/integration/manager/delete", body: {id: id})
-  end
-
-  private
-
-  def post(path, body:)
-    if body.nil? || body.empty?
-      client.post(path)
-    else
-      client.post(path, body: body)
-    end
   end
 end

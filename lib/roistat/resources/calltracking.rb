@@ -3,7 +3,7 @@
 class Roistat::Resources::Calltracking < Roistat::Resources::Base
   # POST /project/calltracking/script/list
   def script_list(**body)
-    post("project/calltracking/script/list", body: body)
+    client.post("project/calltracking/script/list", body: body)
   end
 
   # POST /project/calltracking/script/create
@@ -23,12 +23,12 @@ class Roistat::Resources::Calltracking < Roistat::Resources::Base
 
   # POST /project/calltracking/phone/list
   def phone_list(**body)
-    post("project/calltracking/phone/list", body: body)
+    client.post("project/calltracking/phone/list", body: body)
   end
 
   # POST /project/calltracking/phone/prefix/list
   def phone_prefix_list(**body)
-    post("project/calltracking/phone/prefix/list", body: body)
+    client.post("project/calltracking/phone/prefix/list", body: body)
   end
 
   # POST /project/calltracking/phone/create
@@ -53,7 +53,7 @@ class Roistat::Resources::Calltracking < Roistat::Resources::Base
 
   # POST /project/calltracking/call/list
   def call_list(**body)
-    post("project/calltracking/call/list", body: body)
+    client.post("project/calltracking/call/list", body: body)
   end
 
   # POST /project/calltracking/call/update
@@ -68,7 +68,7 @@ class Roistat::Resources::Calltracking < Roistat::Resources::Base
 
   # POST /project/calltracking/call/{callId}/file
   def call_file(call_id:)
-    client.post("project/calltracking/call/#{call_id}/file", parse: :binary)
+    client.post("project/calltracking/call/#{escape_path_segment(call_id)}/file", parse: :binary)
   end
 
   # POST /project/calltracking/call/xls/export
@@ -88,15 +88,5 @@ class Roistat::Resources::Calltracking < Roistat::Resources::Base
   # POST /project/phone-call
   def phone_call(**body)
     client.post("project/phone-call", body: body)
-  end
-
-  private
-
-  def post(path, body:)
-    if body.nil? || body.empty?
-      client.post(path)
-    else
-      client.post(path, body: body)
-    end
   end
 end

@@ -27,16 +27,6 @@ class Roistat::Resources::Events < Roistat::Resources::Base
 
   # POST /project/events/meta/{eventId}/archive — body is a JSON array
   def archive(event_id:, events:)
-    client.post("project/events/meta/#{event_id}/archive", body: events)
-  end
-
-  private
-
-  def post(path, body:)
-    if body.nil? || body.empty?
-      client.post(path)
-    else
-      client.post(path, body: body)
-    end
+    client.post("project/events/meta/#{escape_path_segment(event_id)}/archive", body: events)
   end
 end

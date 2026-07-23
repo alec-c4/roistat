@@ -8,6 +8,6 @@ class Roistat::Resources::Indicators < Roistat::Resources::Base
 
   # POST /project/health/indicator/{indicatorId}/run-script
   def run_script(indicator_id:)
-    client.post("project/health/indicator/#{indicator_id}/run-script")
+    client.post("project/health/indicator/#{escape_path_segment(indicator_id)}/run-script")
   end
 end

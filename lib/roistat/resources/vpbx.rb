@@ -3,12 +3,12 @@
 class Roistat::Resources::Vpbx < Roistat::Resources::Base
   # POST /project/vpbx/call/list
   def call_list(**body)
-    post_optional_body("project/vpbx/call/list", body)
+    client.post("project/vpbx/call/list", body: body)
   end
 
   # POST /project/vpbx/operator/list
   def operator_list(**body)
-    post_optional_body("project/vpbx/operator/list", body)
+    client.post("project/vpbx/operator/list", body: body)
   end
 
   # POST /project/vpbx/operator/create
@@ -28,7 +28,7 @@ class Roistat::Resources::Vpbx < Roistat::Resources::Base
 
   # POST /project/vpbx/operator/group/list
   def operator_group_list(**body)
-    post_optional_body("project/vpbx/operator/group/list", body)
+    client.post("project/vpbx/operator/group/list", body: body)
   end
 
   # POST /project/vpbx/operator/group/create
@@ -83,7 +83,7 @@ class Roistat::Resources::Vpbx < Roistat::Resources::Base
 
   # POST /project/vpbx/report/data
   def report_data(**body)
-    post_optional_body("project/vpbx/report/data", body)
+    client.post("project/vpbx/report/data", body: body)
   end
 
   # POST /project/vpbx/settings/update

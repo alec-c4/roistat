@@ -73,7 +73,7 @@ class Roistat::Client
     }
 
     options = {params: stringify_keys(query), headers: headers}
-    if body
+    if present_body?(body)
       headers["Content-Type"] = "application/json"
       options[:json] = body
     end
@@ -191,6 +191,10 @@ class Roistat::Client
 
   def blank?(value)
     value.nil? || value.to_s.strip.empty?
+  end
+
+  def present_body?(body)
+    body && !(body.respond_to?(:empty?) && body.empty?)
   end
 
   def url_for(path)

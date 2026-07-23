@@ -3,12 +3,12 @@
 class Roistat::Resources::Channels < Roistat::Resources::Base
   # POST /project/analytics/source/list
   def source_list(**body)
-    post_optional_body("project/analytics/source/list", body)
+    client.post("project/analytics/source/list", body: body)
   end
 
   # POST /project/analytics/source/cost/list
   def cost_list(**body)
-    post_optional_body("project/analytics/source/cost/list", body)
+    client.post("project/analytics/source/cost/list", body: body)
   end
 
   # POST /project/analytics/source/cost/add

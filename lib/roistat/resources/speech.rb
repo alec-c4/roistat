@@ -3,7 +3,7 @@
 class Roistat::Resources::Speech < Roistat::Resources::Base
   # POST /project/speech/call/list
   def call_list(**body)
-    post_optional_body("project/speech/call/list", body)
+    client.post("project/speech/call/list", body: body)
   end
 
   # POST /project/speech/call/list/export/excel
@@ -28,12 +28,12 @@ class Roistat::Resources::Speech < Roistat::Resources::Base
 
   # POST /project/speech/call/transcription/list
   def call_transcription_list(**body)
-    post_optional_body("project/speech/call/transcription/list", body)
+    client.post("project/speech/call/transcription/list", body: body)
   end
 
   # POST /project/speech/dictionary/list
   def dictionary_list(**body)
-    post_optional_body("project/speech/dictionary/list", body)
+    client.post("project/speech/dictionary/list", body: body)
   end
 
   # POST /project/speech/dictionary/custom/create
@@ -53,12 +53,12 @@ class Roistat::Resources::Speech < Roistat::Resources::Base
 
   # POST /project/speech/dictionary/custom/phrase/list
   def dictionary_custom_phrase_list(**body)
-    post_optional_body("project/speech/dictionary/custom/phrase/list", body)
+    client.post("project/speech/dictionary/custom/phrase/list", body: body)
   end
 
   # POST /project/speech/settings/list
   def settings_list(**body)
-    post_optional_body("project/speech/settings/list", body)
+    client.post("project/speech/settings/list", body: body)
   end
 
   # POST /project/speech/settings/update

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "erb"
+
 class Roistat::Resources::Base
   attr_reader :client
 
@@ -21,11 +23,10 @@ class Roistat::Resources::Base
     )
   end
 
-  def post_optional_body(path, body)
-    if body.nil? || body.empty?
-      client.post(path)
-    else
-      client.post(path, body: body)
-    end
+  # Escapes a value for safe interpolation into a URL path segment (IDs may
+  # be arbitrary external strings, e.g. CRM order ids), so characters like
+  # "/", "?", "#" can't alter the request path or inject query parameters.
+  def escape_path_segment(value)
+    ERB::Util.url_encode(value.to_s)
   end
 end

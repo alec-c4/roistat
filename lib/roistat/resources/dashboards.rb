@@ -8,6 +8,6 @@ class Roistat::Resources::Dashboards < Roistat::Resources::Base
 
   # GET /project/dashboards/{dashboardId}/widgets
   def widgets(dashboard_id:)
-    client.get("project/dashboards/#{dashboard_id}/widgets")
+    client.get("project/dashboards/#{escape_path_segment(dashboard_id)}/widgets")
   end
 end

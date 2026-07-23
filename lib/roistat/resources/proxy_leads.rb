@@ -13,6 +13,6 @@ class Roistat::Resources::ProxyLeads < Roistat::Resources::Base
 
   # GET /project/proxy-leads/{proxyLeadId}
   def get(id:)
-    client.get("project/proxy-leads/#{id}")
+    client.get("project/proxy-leads/#{escape_path_segment(id)}")
   end
 end
