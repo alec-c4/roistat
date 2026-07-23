@@ -4,6 +4,8 @@ How-to для разработчиков, которые подключают г
 
 **Предпосылки:** Ruby 3+, ключ API Roistat, id проекта. Полные таблицы методов — в [корневом README](../../README.md) (английский).
 
+Демо с read-only вызовами: [roistat_demo](https://github.com/alec-c4/roistat_demo).
+
 Официальные справочники Roistat:
 
 - [help-ru](https://help-ru.roistat.com/API/methods/about/) — основная инвентаризация путей
@@ -138,5 +140,7 @@ bundle exec rake
 ```
 
 Интерактивная консоль гема: `bin/console`.
+
+Демо-репозиторий: [roistat_demo](https://github.com/alec-c4/roistat_demo).
 
 Багрепорты и PR: https://github.com/alec-c4/roistat

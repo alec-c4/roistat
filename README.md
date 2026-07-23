@@ -2,7 +2,7 @@
 
 Ruby wrapper for the [Roistat REST API](https://help-ru.roistat.com/API/methods/about/).
 
-**[Документация на русском](docs/ru/README.md)**
+**[Документация на русском](docs/ru/README.md)** · **[Demo](https://github.com/alec-c4/roistat_demo)**
 
 The gem sends every request with the `Api-key` header (never as a `key` query param). Project-scoped calls also send `project` in the query string.
 
@@ -740,6 +740,8 @@ Interactive console:
 ```bash
 bin/console
 ```
+
+Read-only playground: [roistat_demo](https://github.com/alec-c4/roistat_demo).
 
 Release:
 
