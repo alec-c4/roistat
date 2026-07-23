@@ -1,3 +1,14 @@
+## [0.1.1] — 2026-07-23
+
+### Fixed
+
+- Escape IDs interpolated into request paths (`orders`, `dashboards`, `calltracking`, `events`, `indicators`, `emailtracking`, `proxy_leads`, `widgets`) so values containing `/`, `?`, `#`, or spaces can't corrupt the request path or inject query parameters
+- `widgets.data(method: :get)` now forwards extra keyword arguments as query params instead of silently dropping them
+
+### Changed
+
+- Centralized empty-body handling in `Roistat::Client#request`; resource classes now call `client.post` directly instead of a per-class `post`/`post_optional_body` helper
+
 ## [0.1.0] — 2026-07-22
 
 ### Added
